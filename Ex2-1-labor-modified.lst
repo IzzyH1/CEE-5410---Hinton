@@ -1,4 +1,4 @@
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/22/26 16:18:54 Page 1
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/23/26 16:05:00 Page 1
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -8,18 +8,16 @@ C o m p i l a t i o n
        
       THE PROBLEM:
        
-      An irrigated farm can be planted in two crops:  eggplants and tomatoes.  Data are as fol-lows:
+      A vehicle manufacturer can produce two different kinds of vehicles: Coups and Minivans.  Data are as follows:
        
-      Seasonal Resource
-      Inputs or Profit        Crops        Resource
-      Availability
-              Eggplant        Tomatoes
-      Water        1x103 gal/plant        2x103 gal/plant      4x106 gal/year
-      Land        4 ft2/plant        3 ft2/plant               1.2x104 ft2
-      Labor         5hr/plant        2.5/hr plant              17,500 hours
-      Profit/plant        $6        $7
        
-                      Determine the optimal planting for the two crops.
+                              Coups                       Minivans            Availability
+      Metal               1x103 lb/vehicle           2x103 lb/vehicle        4x106 lb/year
+      Circuit Boards      4 number/vehicle           3 number/vehicle        1.2x104 number
+      Labor             5 worker days/vehicle     2.5 worker days/vehicle    17,500 worker days
+      Profit/vehicle          $6,000                       $7,000
+       
+                      Determine the optimal manufacturing for the two vehicles.
        
       THE SOLUTION:
       Uses General Algebraic Modeling System to Solve this Linear Program
@@ -27,63 +25,62 @@ C o m p i l a t i o n
       David E Rosenberg
       david.rosenberg@usu.edu
       September 15, 2015
-  27   
-  28  * 1. DEFINE the SETS
-  29  SETS vehicles Type of vehicle to produce /Coup, Minivan/
-  30       res resources /Metal, CircuitBoards, Labor/;
-  31   
-  32  * 2. DEFINE input data
-  33  PARAMETERS
-  34     c(vehicles) Objective function coefficients ($ per vehicle)
-  35           /Coup 6000,
-  36          Minivan 7000 /
-  37   
-  38     b(res) Right hand constraint values (per resource)
-  39            /Metal 4000000,
-  40             CircuitBoards  12000,
-  41             Labor  17500/;
-  42   
-  43  TABLE A(vehicles,res) Left hand side constraint coefficients
-  44                   Metal    CircuitBoards   Labor
-  45   Coup           1000      4                 5
-  46   Minivan        2000      3                 2.5;
-  47   
-  48   
-  49  * 3. DEFINE the variables
-  50  VARIABLES X(vehicles) vehicles manufactured (Number)
-  51            VPROFIT  total profit ($);
-  52   
-  53  * Non-negativity constraints
-  54  POSITIVE VARIABLES X;
-  55   
-  56  * 4. COMBINE variables and data in equations
-  57  EQUATIONS
-  58     PROFIT Total profit ($) and objective function value
-  59     RES_CONSTRAIN(res) Resource Constraints;
-  60   
-  61  PROFIT..                 VPROFIT =E= SUM(vehicles, c(vehicles)*X(vehicles));
-  62  RES_CONSTRAIN(res) ..    SUM(vehicles, A(vehicles,res)*X(vehicles)) =L= b(res);
-  63   
-  64   
-  65  * 5. DEFINE the MODEL from the EQUATIONS
-  66  MODEL PLANTING /PROFIT, RES_CONSTRAIN/;
-  67  *Altnerative way to write (include all previously defined equations)
-  68  *MODEL PLANTING /ALL/;
-  69   
-  70   
-  71  * 6. SOLVE the MODEL
-  72  * Solve the PLANTING model using a Linear Programming Solver (see File=>Options=>Solvers)
-  73  *     to maximize VPROFIT
-  74  SOLVE PLANTING USING LP MAXIMIZING VPROFIT;
-  75   
-  76   
-  77  * 6. CLick File menu => RUN (F9) or Solve icon and examine solution report in .LST file
+  25   
+  26  * 1. DEFINE the SETS
+  27  SETS vehicles Type of vehicle to produce /Coup, Minivan/
+  28       res resources /Metal, CircuitBoards, Labor/;
+  29   
+  30  * 2. DEFINE input data
+  31  PARAMETERS
+  32     c(vehicles) Objective function coefficients ($ per vehicle)
+  33           /Coup 6000,
+  34          Minivan 7000 /
+  35   
+  36     b(res) Right hand constraint values (per resource)
+  37            /Metal 4000000,
+  38             CircuitBoards  12000,
+  39             Labor  17500/;
+  40   
+  41  TABLE A(vehicles,res) Left hand side constraint coefficients
+  42                   Metal    CircuitBoards   Labor
+  43   Coup           1000      4                 5
+  44   Minivan        2000      3                 2.5;
+  45   
+  46   
+  47  * 3. DEFINE the variables
+  48  VARIABLES X(vehicles) vehicles manufactured (Number)
+  49            VPROFIT  total profit ($);
+  50   
+  51  * Non-negativity constraints
+  52  POSITIVE VARIABLES X;
+  53   
+  54  * 4. COMBINE variables and data in equations
+  55  EQUATIONS
+  56     PROFIT Total profit ($) and objective function value
+  57     RES_CONSTRAIN(res) Resource Constraints;
+  58   
+  59  PROFIT..                 VPROFIT =E= SUM(vehicles, c(vehicles)*X(vehicles));
+  60  RES_CONSTRAIN(res) ..    SUM(vehicles, A(vehicles,res)*X(vehicles)) =L= b(res);
+  61   
+  62   
+  63  * 5. DEFINE the MODEL from the EQUATIONS
+  64  MODEL Vehicle_Manufacturing /PROFIT, RES_CONSTRAIN/;
+  65  *Altnerative way to write (include all previously defined equations)
+  66  *MODEL PLANTING /ALL/;
+  67   
+  68   
+  69  * 6. SOLVE the MODEL
+  70  * Solve the PLANTING model using a Linear Programming Solver (see File=>Options=>Solvers)
+  71  *     to maximize VPROFIT
+  72  SOLVE Vehicle_Manufacturing USING LP MAXIMIZING VPROFIT;
+  73   
+  74  * 6. CLick File menu => RUN (F9) or Solve icon and examine solution report in .LST file
 
 
-COMPILATION TIME     =        0.000 SECONDS      3 MB  54.4.0 9a60ae27 WEX-WEI
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/22/26 16:18:54 Page 2
+COMPILATION TIME     =        0.015 SECONDS      3 MB  54.4.0 9a60ae27 WEX-WEI
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/23/26 16:05:00 Page 2
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Equation Listing    SOLVE PLANTING Using LP From line 74
+Equation Listing    SOLVE Vehicle_Manufacturing Using LP From line 72
 
 
 ---- PROFIT  =E=  Total profit ($) and objective function value
@@ -99,9 +96,9 @@ RES_CONSTRAIN(CircuitBoards)..  4*X(Coup) + 3*X(Minivan) =L= 12000 ; (LHS = 0)
      
 RES_CONSTRAIN(Labor)..  5*X(Coup) + 2.5*X(Minivan) =L= 17500 ; (LHS = 0)
      
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/22/26 16:18:54 Page 3
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/23/26 16:05:00 Page 3
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Column Listing      SOLVE PLANTING Using LP From line 74
+Column Listing      SOLVE Vehicle_Manufacturing Using LP From line 72
 
 
 ---- X  vehicles manufactured (Number)
@@ -127,9 +124,9 @@ VPROFIT
                 (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
         1       PROFIT
 
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/22/26 16:18:54 Page 4
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/23/26 16:05:00 Page 4
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Range Statistics    SOLVE PLANTING Using LP From line 74
+Range Statistics    SOLVE Vehicle_Manufacturing Using LP From line 72
 
 
 RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
@@ -138,9 +135,9 @@ RHS       [min, max] : [ 1.200E+04, 4.000E+06] - Zero values observed as well
 Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 Matrix    [min, max] : [ 1.000E+00, 7.000E+03]
 
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/22/26 16:18:54 Page 5
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/23/26 16:05:00 Page 5
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Model Statistics    SOLVE PLANTING Using LP From line 74
+Model Statistics    SOLVE Vehicle_Manufacturing Using LP From line 72
 
 
 MODEL STATISTICS
@@ -150,23 +147,23 @@ BLOCKS OF VARIABLES           2     SINGLE VARIABLES            3
 NON ZERO ELEMENTS             9
 
 
-GENERATION TIME      =        0.016 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/22/26 16:18:54 Page 6
+GENERATION TIME      =        1.032 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/23/26 16:05:00 Page 6
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Solution Report     SOLVE PLANTING Using LP From line 74
+Solution Report     SOLVE Vehicle_Manufacturing Using LP From line 72
 
 
                S O L V E      S U M M A R Y
 
-     MODEL   PLANTING            OBJECTIVE  VPROFIT
-     TYPE    LP                  DIRECTION  MAXIMIZE
-     SOLVER  CPLEX               FROM LINE  74
+     MODEL   Vehicle_Manufacturing   OBJECTIVE  VPROFIT
+     TYPE    LP                      DIRECTION  MAXIMIZE
+     SOLVER  CPLEX                   FROM LINE  72
 
 **** SOLVER STATUS     1 Normal Completion
 **** MODEL STATUS      1 Optimal
 **** OBJECTIVE VALUE         20000000.0000
 
- RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
  ITERATION COUNT, LIMIT         3    2147483647
 *** This solver runs with a community license.
 --- GMO setup time: 0.00s
@@ -177,7 +174,7 @@ Solution Report     SOLVE PLANTING Using LP From line 74
 
 
 --- LP status (1): optimal.
---- Cplex Time: 0.02sec (det. 0.01 ticks)
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
 
 
 Optimal solution found
@@ -217,7 +214,7 @@ Minivan          .           800.0000        +INF             .
                              0  UNBOUNDED
 
 
-EXECUTION TIME       =        0.219 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
+EXECUTION TIME       =        2.125 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
 
 
 USER: Course License                                 G260818+0003Ac-GEN

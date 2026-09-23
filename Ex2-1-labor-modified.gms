@@ -4,18 +4,16 @@ Example Coups Minivans from Lecture Example 2
 
 THE PROBLEM:
 
-An irrigated farm can be planted in two crops:  eggplants and tomatoes.  Data are as fol-lows:
+A vehicle manufacturer can produce two different kinds of vehicles: Coups and Minivans.  Data are as follows:
 
-Seasonal Resource
-Inputs or Profit        Crops        Resource
-Availability
-        Eggplant        Tomatoes
-Water        1x103 gal/plant        2x103 gal/plant      4x106 gal/year
-Land        4 ft2/plant        3 ft2/plant               1.2x104 ft2
-Labor         5hr/plant        2.5/hr plant              17,500 hours
-Profit/plant        $6        $7
 
-                Determine the optimal planting for the two crops.
+                        Coups                       Minivans            Availability
+Metal               1x103 lb/vehicle           2x103 lb/vehicle        4x106 lb/year
+Circuit Boards      4 number/vehicle           3 number/vehicle        1.2x104 number
+Labor             5 worker days/vehicle     2.5 worker days/vehicle    17,500 worker days
+Profit/vehicle          $6,000                       $7,000
+
+                Determine the optimal manufacturing for the two vehicles.
 
 THE SOLUTION:
 Uses General Algebraic Modeling System to Solve this Linear Program
@@ -63,7 +61,7 @@ RES_CONSTRAIN(res) ..    SUM(vehicles, A(vehicles,res)*X(vehicles)) =L= b(res);
 
 
 * 5. DEFINE the MODEL from the EQUATIONS
-MODEL PLANTING /PROFIT, RES_CONSTRAIN/;
+MODEL Vehicle_Manufacturing /PROFIT, RES_CONSTRAIN/;
 *Altnerative way to write (include all previously defined equations)
 *MODEL PLANTING /ALL/;
 
@@ -71,7 +69,6 @@ MODEL PLANTING /PROFIT, RES_CONSTRAIN/;
 * 6. SOLVE the MODEL
 * Solve the PLANTING model using a Linear Programming Solver (see File=>Options=>Solvers)
 *     to maximize VPROFIT
-SOLVE PLANTING USING LP MAXIMIZING VPROFIT;
-
+SOLVE Vehicle_Manufacturing USING LP MAXIMIZING VPROFIT;
 
 * 6. CLick File menu => RUN (F9) or Solve icon and examine solution report in .LST file
