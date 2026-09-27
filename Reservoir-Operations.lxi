@@ -1,0 +1,18 @@
+B 3 C o m p i l a t i o n
+B 107 Equation Listing    SOLVE RELEASE Using LP From line 95
+D 110 PROFIT
+D 115 MAX_STORAGE
+D 124 MIN_STORAGE
+D 129 MASS_BALANCE
+B 139 Column Listing      SOLVE RELEASE Using LP From line 95
+E 142 X
+E 161 VPROFIT
+B 169 Range Statistics    SOLVE RELEASE Using LP From line 95
+B 180 Model Statistics    SOLVE RELEASE Using LP From line 95
+B 193 Solution Report     SOLVE RELEASE Using LP From line 95
+F 226 PROFIT
+F 230 MAX_STORAGE
+F 240 MIN_STORAGE
+F 244 MASS_BALANCE
+G 252 X
+G 268 VPROFIT

@@ -1,0 +1,289 @@
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/27/26 15:56:44 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+      CEE 6410 - Water Resources Systems Analysis
+      Example 2.1 from Bishop Et Al Text (https://digitalcommons.usu.edu/ecstatic_all/76/)
+      Modifies Example to add a labor constraint
+       
+      THE PROBLEM:
+       
+      An irrigated farm can be planted in two crops:  eggplants and tomatoes.  Data are as fol-lows:
+       
+      Seasonal Resource
+      Inputs or Profit        Crops        Resource
+      Availability
+              Eggplant        Tomatoes
+      Water        1x103 gal/plant        2x103 gal/plant      4x106 gal/year
+      Land        4 ft2/plant        3 ft2/plant               1.2x104 ft2
+      Labor         5hr/plant        2.5/hr plant              17,500 hours
+      Profit/plant        $6        $7
+       
+                      Determine the optimal planting for the two crops.
+       
+      THE SOLUTION:
+      Uses General Algebraic Modeling System to Solve this Linear Program
+       
+      David E Rosenberg
+      david.rosenberg@usu.edu
+      September 15, 2015
+  28   
+  29  * 1. DEFINE the SETS
+  30  SETS time time at the end of the month /June, July, August/
+  31       place place the water is being stored /reservoir, spill, diversion/;
+  32   
+  33  Alias (time,tprev);
+  34   
+  35  * 2. DEFINE input data
+  36  PARAMETERS
+  37     Table c(time, place) Objective function constants
+  38              reservoir   spill   diversion
+  39     June         0         0       150
+  40     July         0         0       170
+  41     August       0         0       425;
+  42   
+  43   
+  44     Parameters
+  45     b(time) Right hand constraint values (per month)
+  46      /June    9000,
+  47       July    9000,
+  48      August   9000/
+  49   
+  50      i(time) Inflow constraints (per month)
+  51      /June    5000,
+  52      July     3200,
+  53      August   2000/;
+  54   
+  55    TABLE A(time,place) Left hand side constraint coefficients
+  56              reservoir     spill     diversion
+  57      June     1              0          0
+  58      July     1              0          0
+  59      August   1              0          0;
+  60   
+  61   
+  62  * 3. DEFINE the variables
+  63  VARIABLES X(time,place) Water released by the end of the month to each place
+  64            VPROFIT  total profit ($);
+  65   
+  66  * Non-negativity constraints
+  67  POSITIVE VARIABLES X;
+  68   
+  69  * 4. COMBINE variables and data in equations
+  70  EQUATIONS
+  71     PROFIT Total profit ($) and objective function value
+  72     MAX_STORAGE(time) Resource Constraints
+  73     MIN_STORAGE minimum storage constraint for august
+  74     MASS_BALANCE(time);
+  75   
+  76  PROFIT..                 VPROFIT =E= SUM((time,place), c(time,place)*X(time,place));
+  77  MAX_STORAGE(time) ..    SUM(place, A(time,place)*X(time, "reservoir")) =L= b(time);
+  78  MIN_STORAGE..           X("August", "reservoir") =G= 3000;
+  79  MASS_BAlANCE(time)..         X(time, "reservoir")
+  80                             - sum(tprev$(ord(tprev) = ord(time)-1), X(tprev,"reservoir")) - 3000$(ord(time)=1)
+  81                             + X(time, "spill")
+  82                             + X(time, "diversion")
+  83                             =E= i(time);
+  84   
+  85   
+  86  * 5. DEFINE the MODEL from the EQUATIONS
+  87  MODEL RELEASE /PROFIT, MAX_STORAGE, MIN_STORAGE, MASS_BALANCE/;
+  88  *Altnerative way to write (include all previously defined equations)
+  89  *MODEL PLANTING /ALL/;
+  90   
+  91   
+  92  * 6. SOLVE the MODEL
+  93  * Solve the PLANTING model using a Linear Programming Solver (see File=>Options=>Solvers)
+  94  *     to maximize VPROFIT
+  95  SOLVE RELEASE USING LP MAXIMIZING VPROFIT;
+  96   
+  97   
+  98  * 6. CLick File menu => RUN (F9) or Solve icon and examine solution report in .LST file
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  54.4.0 9a60ae27 WEX-WEI
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/27/26 15:56:44 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE RELEASE Using LP From line 95
+
+
+---- PROFIT  =E=  Total profit ($) and objective function value
+
+PROFIT..  - 150*X(June,diversion) - 170*X(July,diversion) - 425*X(August,diversion) + VPROFIT =E= 0 ; (LHS = 0)
+     
+
+---- MAX_STORAGE  =L=  Resource Constraints
+
+MAX_STORAGE(June)..  X(June,reservoir) =L= 9000 ; (LHS = 0)
+     
+MAX_STORAGE(July)..  X(July,reservoir) =L= 9000 ; (LHS = 0)
+     
+MAX_STORAGE(August)..  X(August,reservoir) =L= 9000 ; (LHS = 0)
+     
+
+---- MIN_STORAGE  =G=  minimum storage constraint for august
+
+MIN_STORAGE..  X(August,reservoir) =G= 3000 ; (LHS = 0, INFES = 3000 ****)
+     
+
+---- MASS_BALANCE  =E=  
+
+MASS_BALANCE(June)..  X(June,reservoir) + X(June,spill) + X(June,diversion) =E= 8000 ; (LHS = 0, INFES = 8000 ****)
+     
+MASS_BALANCE(July)..  - X(June,reservoir) + X(July,reservoir) + X(July,spill) + X(July,diversion) =E= 3200 ; (LHS = 0, INFES = 3200 ****)
+     
+MASS_BALANCE(August)..  - X(July,reservoir) + X(August,reservoir) + X(August,spill) + X(August,diversion) =E= 2000 ; (LHS = 0, INFES = 2000 ****)
+     
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/27/26 15:56:44 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE RELEASE Using LP From line 95
+
+
+---- X  Water released by the end of the month to each place
+
+X(June,reservoir)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       MAX_STORAGE(June)
+        1       MASS_BALANCE(June)
+       -1       MASS_BALANCE(July)
+
+X(June,spill)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       MASS_BALANCE(June)
+
+X(June,diversion)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+     -150       PROFIT
+        1       MASS_BALANCE(June)
+
+REMAINING 6 ENTRIES SKIPPED
+
+---- VPROFIT  total profit ($)
+
+VPROFIT
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       PROFIT
+
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/27/26 15:56:44 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE RELEASE Using LP From line 95
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 2.000E+03, 9.000E+03] - Zero values observed as well
+Bound     [min, max] : [        NA,        NA] - Zero values observed as well
+Matrix    [min, max] : [ 1.000E+00, 4.250E+02]
+
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/27/26 15:56:44 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE RELEASE Using LP From line 95
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            8
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES           10
+NON ZERO ELEMENTS            19
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/27/26 15:56:44 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE RELEASE Using LP From line 95
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   RELEASE             OBJECTIVE  VPROFIT
+     TYPE    LP                  DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  95
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE          3774000.0000
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+*** This solver runs with a community license.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 22.1.2.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:      3774000.000000
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU PROFIT              .              .              .             1.0000      
+
+  PROFIT  Total profit ($) and objective function value
+
+---- EQU MAX_STORAGE  Resource Constraints
+
+              LOWER          LEVEL          UPPER         MARGINAL
+
+June          -INF         8000.0000      9000.0000          .          
+July          -INF         9000.0000      9000.0000       255.0000      
+August        -INF         3000.0000      9000.0000          .          
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU MIN_STORA~      3000.0000      3000.0000        +INF         -425.0000      
+
+  MIN_STORAGE  minimum storage constraint for august
+
+---- EQU MASS_BALANCE  
+
+              LOWER          LEVEL          UPPER         MARGINAL
+
+June        8000.0000      8000.0000      8000.0000       170.0000      
+July        3200.0000      3200.0000      3200.0000       170.0000      
+August      2000.0000      2000.0000      2000.0000       425.0000      
+
+---- VAR X  Water released by the end of the month to each place
+
+                        LOWER          LEVEL          UPPER         MARGINAL
+
+June  .reservoir          .          8000.0000        +INF             .          
+June  .spill              .              .            +INF         -170.0000      
+June  .diversion          .              .            +INF          -20.0000      
+July  .reservoir          .          9000.0000        +INF             .          
+July  .spill              .              .            +INF         -170.0000      
+July  .diversion          .          2200.0000        +INF             .          
+August.reservoir          .          3000.0000        +INF             .          
+August.spill              .              .            +INF         -425.0000      
+August.diversion          .          8000.0000        +INF             .          
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR VPROFIT           -INF      3774000.0000        +INF             .          
+
+  VPROFIT  total profit ($)
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+
+
+EXECUTION TIME       =        0.094 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
+
+
+USER: Course License                                 G260818+0003Ac-GEN
+      Utah State University                                     DCE5615
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\Reservoir-Operations.gms
+Output     C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\Reservoir-Operations.lst
