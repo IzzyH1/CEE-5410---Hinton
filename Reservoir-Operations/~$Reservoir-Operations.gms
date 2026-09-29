@@ -4,9 +4,7 @@ HW3 - Problem 1
 
 THE PROBLEM:
 
-A reservoir operator wants a release schedule that will maximize profit.  Data are as fol-lows:
-
-
+A reservoir operator wants a release schedule that will maximize profit.
 
                 Determine the optimal volume of water to divert each month.
 

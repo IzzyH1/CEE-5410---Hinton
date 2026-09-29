@@ -1,110 +1,102 @@
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/27/26 15:56:44 Page 1
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/28/26 16:13:25 Page 1
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
 
       CEE 6410 - Water Resources Systems Analysis
-      Example 2.1 from Bishop Et Al Text (https://digitalcommons.usu.edu/ecstatic_all/76/)
-      Modifies Example to add a labor constraint
+      HW3 - Problem 1
        
       THE PROBLEM:
        
-      An irrigated farm can be planted in two crops:  eggplants and tomatoes.  Data are as fol-lows:
+      A reservoir operator wants a release schedule that will maximize profit.  Data are as fol-lows:
        
-      Seasonal Resource
-      Inputs or Profit        Crops        Resource
-      Availability
-              Eggplant        Tomatoes
-      Water        1x103 gal/plant        2x103 gal/plant      4x106 gal/year
-      Land        4 ft2/plant        3 ft2/plant               1.2x104 ft2
-      Labor         5hr/plant        2.5/hr plant              17,500 hours
-      Profit/plant        $6        $7
        
-                      Determine the optimal planting for the two crops.
+       
+                      Determine the optimal volume of water to divert each month.
        
       THE SOLUTION:
       Uses General Algebraic Modeling System to Solve this Linear Program
        
-      David E Rosenberg
-      david.rosenberg@usu.edu
-      September 15, 2015
-  28   
-  29  * 1. DEFINE the SETS
-  30  SETS time time at the end of the month /June, July, August/
-  31       place place the water is being stored /reservoir, spill, diversion/;
-  32   
-  33  Alias (time,tprev);
+      Isabel I. Hinton
+      isabel.hinton@usu.edu
+      September 28, 2026
+  20   
+  21  * 1. DEFINE the SETS
+  22  SETS time time at the end of the month /June, July, August/
+  23       place place the water is being stored /reservoir, spill, diversion/;
+  24   
+  25  Alias (time,tprev);
+  26   
+  27  * 2. DEFINE input data
+  28  PARAMETERS
+  29     Table c(time, place) Objective function constants
+  30              reservoir   spill   diversion
+  31     June         0         0       150
+  32     July         0         0       170
+  33     August       0         0       425;
   34   
-  35  * 2. DEFINE input data
-  36  PARAMETERS
-  37     Table c(time, place) Objective function constants
-  38              reservoir   spill   diversion
-  39     June         0         0       150
-  40     July         0         0       170
-  41     August       0         0       425;
-  42   
-  43   
-  44     Parameters
-  45     b(time) Right hand constraint values (per month)
-  46      /June    9000,
-  47       July    9000,
-  48      August   9000/
-  49   
-  50      i(time) Inflow constraints (per month)
-  51      /June    5000,
-  52      July     3200,
-  53      August   2000/;
-  54   
-  55    TABLE A(time,place) Left hand side constraint coefficients
-  56              reservoir     spill     diversion
-  57      June     1              0          0
-  58      July     1              0          0
-  59      August   1              0          0;
+  35   
+  36     Parameters
+  37     b(time) Right hand constraint values (per month)
+  38      /June    9000,
+  39       July    9000,
+  40      August   9000/
+  41   
+  42      i(time) Inflow constraints (per month)
+  43      /June    5000,
+  44      July     3200,
+  45      August   2000/;
+  46   
+  47    TABLE A(time,place) Left hand side constraint coefficients
+  48              reservoir     spill     diversion
+  49      June     1              0          0
+  50      July     1              0          0
+  51      August   1              0          0;
+  52   
+  53   
+  54  * 3. DEFINE the variables
+  55  VARIABLES X(time,place) Water released by the end of the month to each place
+  56            VPROFIT  total profit ($);
+  57   
+  58  * Non-negativity constraints
+  59  POSITIVE VARIABLES X;
   60   
-  61   
-  62  * 3. DEFINE the variables
-  63  VARIABLES X(time,place) Water released by the end of the month to each place
-  64            VPROFIT  total profit ($);
-  65   
-  66  * Non-negativity constraints
-  67  POSITIVE VARIABLES X;
-  68   
-  69  * 4. COMBINE variables and data in equations
-  70  EQUATIONS
-  71     PROFIT Total profit ($) and objective function value
-  72     MAX_STORAGE(time) Resource Constraints
-  73     MIN_STORAGE minimum storage constraint for august
-  74     MASS_BALANCE(time);
-  75   
-  76  PROFIT..                 VPROFIT =E= SUM((time,place), c(time,place)*X(time,place));
-  77  MAX_STORAGE(time) ..    SUM(place, A(time,place)*X(time, "reservoir")) =L= b(time);
-  78  MIN_STORAGE..           X("August", "reservoir") =G= 3000;
-  79  MASS_BAlANCE(time)..         X(time, "reservoir")
-  80                             - sum(tprev$(ord(tprev) = ord(time)-1), X(tprev,"reservoir")) - 3000$(ord(time)=1)
-  81                             + X(time, "spill")
-  82                             + X(time, "diversion")
-  83                             =E= i(time);
-  84   
-  85   
-  86  * 5. DEFINE the MODEL from the EQUATIONS
-  87  MODEL RELEASE /PROFIT, MAX_STORAGE, MIN_STORAGE, MASS_BALANCE/;
-  88  *Altnerative way to write (include all previously defined equations)
-  89  *MODEL PLANTING /ALL/;
-  90   
-  91   
-  92  * 6. SOLVE the MODEL
-  93  * Solve the PLANTING model using a Linear Programming Solver (see File=>Options=>Solvers)
-  94  *     to maximize VPROFIT
-  95  SOLVE RELEASE USING LP MAXIMIZING VPROFIT;
-  96   
-  97   
-  98  * 6. CLick File menu => RUN (F9) or Solve icon and examine solution report in .LST file
+  61  * 4. COMBINE variables and data in equations
+  62  EQUATIONS
+  63     PROFIT Total profit ($) and objective function value
+  64     MAX_STORAGE(time) Resource Constraints
+  65     MIN_STORAGE minimum storage constraint for august
+  66     MASS_BALANCE(time);
+  67   
+  68  PROFIT..                 VPROFIT =E= SUM((time,place), c(time,place)*X(time,place));
+  69  MAX_STORAGE(time) ..    SUM(place, A(time,place)*X(time, "reservoir")) =L= b(time);
+  70  MIN_STORAGE..           X("August", "reservoir") =G= 3000;
+  71  MASS_BAlANCE(time)..         X(time, "reservoir")
+  72                             - sum(tprev$(ord(tprev) = ord(time)-1), X(tprev,"reservoir")) - 3000$(ord(time)=1)
+  73                             + X(time, "spill")
+  74                             + X(time, "diversion")
+  75                             =E= i(time);
+  76   
+  77   
+  78  * 5. DEFINE the MODEL from the EQUATIONS
+  79  MODEL RELEASE /PROFIT, MAX_STORAGE, MIN_STORAGE, MASS_BALANCE/;
+  80  *Altnerative way to write (include all previously defined equations)
+  81  *MODEL PLANTING /ALL/;
+  82   
+  83   
+  84  * 6. SOLVE the MODEL
+  85  * Solve the PLANTING model using a Linear Programming Solver (see File=>Options=>Solvers)
+  86  *     to maximize VPROFIT
+  87  SOLVE RELEASE USING LP MAXIMIZING VPROFIT;
+  88   
+  89   
+  90  * 6. CLick File menu => RUN (F9) or Solve icon and examine solution report in .LST file
 
 
 COMPILATION TIME     =        0.000 SECONDS      3 MB  54.4.0 9a60ae27 WEX-WEI
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/27/26 15:56:44 Page 2
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/28/26 16:13:25 Page 2
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Equation Listing    SOLVE RELEASE Using LP From line 95
+Equation Listing    SOLVE RELEASE Using LP From line 87
 
 
 ---- PROFIT  =E=  Total profit ($) and objective function value
@@ -134,9 +126,9 @@ MASS_BALANCE(July)..  - X(June,reservoir) + X(July,reservoir) + X(July,spill) + 
      
 MASS_BALANCE(August)..  - X(July,reservoir) + X(August,reservoir) + X(August,spill) + X(August,diversion) =E= 2000 ; (LHS = 0, INFES = 2000 ****)
      
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/27/26 15:56:44 Page 3
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/28/26 16:13:25 Page 3
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Column Listing      SOLVE RELEASE Using LP From line 95
+Column Listing      SOLVE RELEASE Using LP From line 87
 
 
 ---- X  Water released by the end of the month to each place
@@ -164,9 +156,9 @@ VPROFIT
                 (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
         1       PROFIT
 
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/27/26 15:56:44 Page 4
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/28/26 16:13:25 Page 4
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Range Statistics    SOLVE RELEASE Using LP From line 95
+Range Statistics    SOLVE RELEASE Using LP From line 87
 
 
 RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
@@ -175,9 +167,9 @@ RHS       [min, max] : [ 2.000E+03, 9.000E+03] - Zero values observed as well
 Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 Matrix    [min, max] : [ 1.000E+00, 4.250E+02]
 
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/27/26 15:56:44 Page 5
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/28/26 16:13:25 Page 5
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Model Statistics    SOLVE RELEASE Using LP From line 95
+Model Statistics    SOLVE RELEASE Using LP From line 87
 
 
 MODEL STATISTICS
@@ -187,23 +179,23 @@ BLOCKS OF VARIABLES           2     SINGLE VARIABLES           10
 NON ZERO ELEMENTS            19
 
 
-GENERATION TIME      =        0.016 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/27/26 15:56:44 Page 6
+GENERATION TIME      =        0.125 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 09/28/26 16:13:25 Page 6
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Solution Report     SOLVE RELEASE Using LP From line 95
+Solution Report     SOLVE RELEASE Using LP From line 87
 
 
                S O L V E      S U M M A R Y
 
      MODEL   RELEASE             OBJECTIVE  VPROFIT
      TYPE    LP                  DIRECTION  MAXIMIZE
-     SOLVER  CPLEX               FROM LINE  95
+     SOLVER  CPLEX               FROM LINE  87
 
 **** SOLVER STATUS     1 Normal Completion
 **** MODEL STATUS      1 Optimal
 **** OBJECTIVE VALUE          3774000.0000
 
- RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
  ITERATION COUNT, LIMIT         0    2147483647
 *** This solver runs with a community license.
 --- GMO setup time: 0.00s
@@ -214,7 +206,7 @@ Solution Report     SOLVE RELEASE Using LP From line 95
 
 
 --- LP status (1): optimal.
---- Cplex Time: 0.02sec (det. 0.01 ticks)
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
 
 
 Optimal solution found
@@ -275,7 +267,7 @@ August.diversion          .          8000.0000        +INF             .
                              0  UNBOUNDED
 
 
-EXECUTION TIME       =        0.094 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
+EXECUTION TIME       =        0.641 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
 
 
 USER: Course License                                 G260818+0003Ac-GEN
@@ -285,5 +277,5 @@ USER: Course License                                 G260818+0003Ac-GEN
 
 **** FILE SUMMARY
 
-Input      C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\Reservoir-Operations.gms
-Output     C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\Reservoir-Operations.lst
+Input      C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\Reservoir-Operations\Reservoir-Operations.gms
+Output     C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\Reservoir-Operations\Reservoir-Operations.lst

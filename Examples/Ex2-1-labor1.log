@@ -1,10 +1,10 @@
---- Job Ex2-1-labor.gms Start 09/22/26 15:22:26 54.4.0 9a60ae27 WEX-WEI x86 64bit/MS Windows
+--- Job Ex2-1-labor.gms Start 09/28/26 16:26:04 54.4.0 9a60ae27 WEX-WEI x86 64bit/MS Windows
 --- Applying:
     C:\GAMS\54\gmsprmNT.txt
 --- GAMS Parameters defined
-    Input "C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\Ex2-1-labor.gms"
+    Input "C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\Examples\Ex2-1-labor.gms"
     PageSize 0
-    ScrDir "C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\225a\"
+    ScrDir "C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\Examples\225a\"
     SysDir C:\GAMS\54\
     LogOption 3
     AppendLog 1
@@ -16,14 +16,14 @@ Licensee: Course License                                 G260818+0003Ac-GEN
           Utah State University                                     DCE5615
           225a\gamslice.dat
           1d9a2824-f32d-4897
-          node:89659105 mem:16 cores:12 ipport:63843 v:2                   
+          node:89659105 mem:16 cores:12 ipport:62673 v:2                   
           Course license for use within the course and related course work
           The time-limited license stops working on : Jun 14, 2027
 System information: 12 physical cores and 16 Gb physical memory detected
 GAMS 54.4.0   Copyright (C) 1987-2026 GAMS Development. All rights reserved
 --- Starting compilation
 --- Ex2-1-labor.gms(78) 3 Mb
---- Starting execution: elapsed 0:00:00.075
+--- Starting execution: elapsed 0:00:00.015
 --- Generating LP model PLANTING
 --- Ex2-1-labor.gms(75) 4 Mb
 ---   4 rows  3 columns  9 non-zeroes
@@ -31,7 +31,7 @@ GAMS 54.4.0   Copyright (C) 1987-2026 GAMS Development. All rights reserved
 --- RHS       [min, max] : [ 1.200E+04, 4.000E+06] - Zero values observed as well
 --- Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 --- Matrix    [min, max] : [ 1.000E+00, 2.000E+03]
---- Executing CPLEX (Solvelink=2): elapsed 0:00:00.142
+--- Executing CPLEX (Solvelink=2): elapsed 0:00:00.022
 
 IBM ILOG CPLEX   54.4.0 9a60ae27 Sep 9, 2026           WEI x86 64bit/MS Window
 
@@ -68,4 +68,4 @@ Objective:        20000.000000
 
 --- Reading solution for model PLANTING
 *** Status: Normal completion
---- Job Ex2-1-labor.gms Stop 09/22/26 15:22:27 elapsed 0:00:00.380
+--- Job Ex2-1-labor.gms Stop 09/28/26 16:26:04 elapsed 0:00:00.145
