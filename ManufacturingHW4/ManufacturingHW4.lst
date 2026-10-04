@@ -1,0 +1,315 @@
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/04/26 16:51:02 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+      CEE 6410 - Water Resources Systems Analysis
+      HW4 Problem 2
+       
+      THE PROBLEM:
+       
+      Shelving units are distributed from manufacturers to suppliers to recipients. Data is as follows:
+       
+      Maximum number of shelves manufacturers can produce:
+      Arnold: 75
+      Supershelf: 75
+       
+      Minimum number of shelves needed at recipients:
+      Zrox: 50
+      Hewes: 60
+      Rock-Wright: 40
+       
+      Cost to ship from manufacturer to supplier
+                       Thomas    Wash-Burn  
+       Arnold             5          8     
+       Supershelf         7          4
+       
+      Cost to ship from supplier to recipient
+                        Zrox        Hewes     Rock-Wright
+      Thomas              1           5           8
+      Wash-Burn           3           4           4
+       
+                      Determine the optimal path for delivery that will minimize cost of shipping.
+       
+      THE SOLUTION:
+      Uses General Algebraic Modeling System to Solve this Linear Program
+       
+      Izzy Hinton
+      isabel.hinton@usu.edu
+      October 04, 2026
+  37   
+  38  * 1. DEFINE the SETS
+  39  SETS man manufacturers /Arnold, Supershelf/
+  40       sup suppliers /Thomas, Wash-Burn/
+  41       recip recipients /Zrox, Hewes, Rock-Wright/;
+  42   
+  43  * 2. DEFINE input data
+  44   
+  45  TABLE MantoSupCosts(man,sup) Costs to ship from each manufacturer to each supplier objective function coefficients
+  46                   Thomas    Wash-Burn
+  47   Arnold             5          8
+  48   Supershelf         7          4;
+  49   
+  50  TABLE SuptoRecipCosts(sup, recip) Costs to ship from each supplier to each recipient objective function coeffiecients
+  51                    Zrox        Hewes     Rock-Wright
+  52  Thomas              1           5           8
+  53  Wash-Burn           3           4           4;
+  54   
+  55  Parameters mintorecips(recip) minimum number of shelves that need to be delivered to each recipient
+  56      /Zrox   50,
+  57      Hewes   60
+  58      Rock-Wright 40/;
+  59   
+  60  * 3. DEFINE the variables
+  61  VARIABLES X(man,sup) shelves shipped from a manufacturer to a supplier (Number)
+  62            Y(sup, recip) shelves shipped from a supplier to a recipient (Number)
+  63            VCOST  total cost ($);
+  64   
+  65  * Non-negativity constraints
+  66  POSITIVE VARIABLES X, Y;
+  67   
+  68  * 4. COMBINE variables and data in equations
+  69  EQUATIONS
+  70     COST Total cost ($) and objective function value
+  71     MAN_CONSTRAIN(man) Constraints on manufacturing supplies
+  72     SUP_CONSTRAIN(sup) Constraints on what suppliers are able to ship to recipients
+  73     RECIP_CONSTRAIN(recip) Constraints on minimum shelves that need to be delivered to recipients;
+  74   
+  75  COST..                   VCOST =E= SUM((man,sup), MantoSupCosts(man,sup)*X(man,sup)) + SUM((sup, recip), SuptoRecipCosts(sup, recip)*Y(sup, recip));
+  76  MAN_CONSTRAIN(man)..     Sum(sup, X(man, sup)) =L= 75;
+  77  SUP_CONSTRAIN(sup)..     Sum(man, X(man, sup)) =G= Sum(recip, Y(sup,recip));
+  78  RECIP_CONSTRAIN(recip).. Sum(sup, Y(sup, recip)) =G= mintorecips(recip);
+  79   
+  80   
+  81  * 5. DEFINE the MODEL from the EQUATIONS
+  82  MODEL DELIVERING /ALL/;
+  83  *Altnerative way to write (include all previously defined equations)
+  84  *MODEL PLANTING /ALL/;
+  85   
+  86   
+  87  * 6. SOLVE the MODEL
+  88  * Solve the PLANTING model using a Linear Programming Solver (see File=>Options=>Solvers)
+  89  *     to maximize VPROFIT
+  90  SOLVE DELIVERING USING LP MINIMIZING VCOST;
+  91   
+  92   
+  93  * 6. CLick File menu => RUN (F9) or Solve icon and examine solution report in .LST file
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  54.4.0 9a60ae27 WEX-WEI
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/04/26 16:51:02 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE DELIVERING Using LP From line 90
+
+
+---- COST  =E=  Total cost ($) and objective function value
+
+COST..  - 5*X(Arnold,Thomas) - 8*X(Arnold,Wash-Burn) - 7*X(Supershelf,Thomas) - 4*X(Supershelf,Wash-Burn) - Y(Thomas,Zrox) - 5*Y(Thomas,Hewes) - 8*Y(Thomas,Rock-Wright) - 3*Y(Wash-Burn,Zrox) - 4*Y(Wash-Burn,Hewes) - 4*Y(Wash-Burn,Rock-Wright) + VCOST =E= 0 ; (LHS = 0)
+     
+
+---- MAN_CONSTRAIN  =L=  Constraints on manufacturing supplies
+
+MAN_CONSTRAIN(Arnold)..  X(Arnold,Thomas) + X(Arnold,Wash-Burn) =L= 75 ; (LHS = 0)
+     
+MAN_CONSTRAIN(Supershelf)..  X(Supershelf,Thomas) + X(Supershelf,Wash-Burn) =L= 75 ; (LHS = 0)
+     
+
+---- SUP_CONSTRAIN  =G=  Constraints on what suppliers are able to ship to recipients
+
+SUP_CONSTRAIN(Thomas)..  X(Arnold,Thomas) + X(Supershelf,Thomas) - Y(Thomas,Zrox) - Y(Thomas,Hewes) - Y(Thomas,Rock-Wright) =G= 0 ; (LHS = 0)
+     
+SUP_CONSTRAIN(Wash-Burn)..  X(Arnold,Wash-Burn) + X(Supershelf,Wash-Burn) - Y(Wash-Burn,Zrox) - Y(Wash-Burn,Hewes) - Y(Wash-Burn,Rock-Wright) =G= 0 ; (LHS = 0)
+     
+
+---- RECIP_CONSTRAIN  =G=  Constraints on minimum shelves that need to be delivered to recipients
+
+RECIP_CONSTRAIN(Zrox)..  Y(Thomas,Zrox) + Y(Wash-Burn,Zrox) =G= 50 ; (LHS = 0, INFES = 50 ****)
+     
+RECIP_CONSTRAIN(Hewes)..  Y(Thomas,Hewes) + Y(Wash-Burn,Hewes) =G= 60 ; (LHS = 0, INFES = 60 ****)
+     
+RECIP_CONSTRAIN(Rock-Wright)..  Y(Thomas,Rock-Wright) + Y(Wash-Burn,Rock-Wright) =G= 40 ; (LHS = 0, INFES = 40 ****)
+     
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/04/26 16:51:02 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE DELIVERING Using LP From line 90
+
+
+---- X  shelves shipped from a manufacturer to a supplier (Number)
+
+X(Arnold,Thomas)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -5       COST
+        1       MAN_CONSTRAIN(Arnold)
+        1       SUP_CONSTRAIN(Thomas)
+
+X(Arnold,Wash-Burn)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -8       COST
+        1       MAN_CONSTRAIN(Arnold)
+        1       SUP_CONSTRAIN(Wash-Burn)
+
+X(Supershelf,Thomas)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -7       COST
+        1       MAN_CONSTRAIN(Supershelf)
+        1       SUP_CONSTRAIN(Thomas)
+
+REMAINING ENTRY SKIPPED
+
+---- Y  shelves shipped from a supplier to a recipient (Number)
+
+Y(Thomas,Zrox)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -1       COST
+       -1       SUP_CONSTRAIN(Thomas)
+        1       RECIP_CONSTRAIN(Zrox)
+
+Y(Thomas,Hewes)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -5       COST
+       -1       SUP_CONSTRAIN(Thomas)
+        1       RECIP_CONSTRAIN(Hewes)
+
+Y(Thomas,Rock-Wright)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -8       COST
+       -1       SUP_CONSTRAIN(Thomas)
+        1       RECIP_CONSTRAIN(Rock-Wright)
+
+REMAINING 3 ENTRIES SKIPPED
+
+---- VCOST  total cost ($)
+
+VCOST
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       COST
+
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/04/26 16:51:02 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE DELIVERING Using LP From line 90
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 4.000E+01, 7.500E+01] - Zero values observed as well
+Bound     [min, max] : [        NA,        NA] - Zero values observed as well
+Matrix    [min, max] : [ 1.000E+00, 8.000E+00]
+
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/04/26 16:51:02 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE DELIVERING Using LP From line 90
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            8
+BLOCKS OF VARIABLES           3     SINGLE VARIABLES           11
+NON ZERO ELEMENTS            31
+
+
+GENERATION TIME      =        0.031 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/04/26 16:51:02 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE DELIVERING Using LP From line 90
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   DELIVERING          OBJECTIVE  VCOST
+     TYPE    LP                  DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  90
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE             1150.0000
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         7    2147483647
+*** This solver runs with a community license.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 22.1.2.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.02 ticks)
+
+
+Optimal solution found
+Objective:         1150.000000
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU COST                .              .              .             1.0000      
+
+  COST  Total cost ($) and objective function value
+
+---- EQU MAN_CONSTRAIN  Constraints on manufacturing supplies
+
+                  LOWER          LEVEL          UPPER         MARGINAL
+
+Arnold            -INF           75.0000        75.0000          .          
+Supershelf        -INF           75.0000        75.0000        -2.0000      
+
+---- EQU SUP_CONSTRAIN  Constraints on what suppliers are able to ship to recipients
+
+                 LOWER          LEVEL          UPPER         MARGINAL
+
+Thomas             .              .            +INF            5.0000      
+Wash-Burn          .              .            +INF            6.0000      
+
+---- EQU RECIP_CONSTRAIN  Constraints on minimum shelves that need to be delivered to recipients
+
+                   LOWER          LEVEL          UPPER         MARGINAL
+
+Zrox               50.0000        50.0000        +INF            6.0000      
+Hewes              60.0000        60.0000        +INF           10.0000      
+Rock-Wright        40.0000        40.0000        +INF           10.0000      
+
+---- VAR X  shelves shipped from a manufacturer to a supplier (Number)
+
+                            LOWER          LEVEL          UPPER         MARGINAL
+
+Arnold    .Thomas             .            75.0000        +INF             .          
+Arnold    .Wash-Burn          .              .            +INF            2.0000      
+Supershelf.Thomas             .              .            +INF            4.0000      
+Supershelf.Wash-Burn          .            75.0000        +INF             .          
+
+---- VAR Y  shelves shipped from a supplier to a recipient (Number)
+
+                             LOWER          LEVEL          UPPER         MARGINAL
+
+Thomas   .Zrox                 .            50.0000        +INF             .          
+Thomas   .Hewes                .            25.0000        +INF             .          
+Thomas   .Rock-Wright          .              .            +INF            3.0000      
+Wash-Burn.Zrox                 .              .            +INF            3.0000      
+Wash-Burn.Hewes                .            35.0000        +INF             .          
+Wash-Burn.Rock-Wright          .            40.0000        +INF             .          
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR VCOST             -INF         1150.0000        +INF             .          
+
+  VCOST  total cost ($)
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+
+
+EXECUTION TIME       =        0.203 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
+
+
+USER: Course License                                 G260818+0003Ac-GEN
+      Utah State University                                     DCE5615
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\ManufacturingHW4\ManufacturingHW4.gms
+Output     C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\ManufacturingHW4\ManufacturingHW4.lst
