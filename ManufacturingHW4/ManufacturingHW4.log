@@ -1,5 +1,5 @@
 
---- Job ManufacturingHW4.gms Start 10/04/26 16:51:02 54.4.0 9a60ae27 WEX-WEI x86 64bit/MS Windows
+--- Job ManufacturingHW4.gms Start 10/05/26 22:19:10 54.4.0 9a60ae27 WEX-WEI x86 64bit/MS Windows
 --- Applying:
     C:\GAMS\54\gmsprmNT.txt
 --- GAMS Parameters defined
@@ -17,14 +17,14 @@ Licensee: Course License                                 G260818+0003Ac-GEN
           Utah State University                                     DCE5615
           225a\gamslice.dat
           1d9a2824-f32d-4897
-          node:89659105 mem:16 cores:12 ipport:61800 v:2                   
+          node:89659105 mem:16 cores:12 ipport:52216 v:2                   
           Course license for use within the course and related course work
           The time-limited license stops working on : Jun 14, 2027
 System information: 12 physical cores and 16 Gb physical memory detected
 GAMS 54.4.0   Copyright (C) 1987-2026 GAMS Development. All rights reserved
 --- Starting compilation
 --- ManufacturingHW4.gms(93) 3 Mb
---- Starting execution: elapsed 0:00:00.058
+--- Starting execution: elapsed 0:00:00.064
 --- Generating LP model DELIVERING
 --- ManufacturingHW4.gms(90) 4 Mb
 ---   8 rows  11 columns  31 non-zeroes
@@ -32,7 +32,7 @@ GAMS 54.4.0   Copyright (C) 1987-2026 GAMS Development. All rights reserved
 --- RHS       [min, max] : [ 4.000E+01, 7.500E+01] - Zero values observed as well
 --- Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 --- Matrix    [min, max] : [ 1.000E+00, 8.000E+00]
---- Executing CPLEX (Solvelink=2): elapsed 0:00:00.077
+--- Executing CPLEX (Solvelink=2): elapsed 0:00:00.143
 
 IBM ILOG CPLEX   54.4.0 9a60ae27 Sep 9, 2026           WEI x86 64bit/MS Window
 
@@ -73,4 +73,4 @@ Objective:         1150.000000
 
 --- Reading solution for model DELIVERING
 *** Status: Normal completion
---- Job ManufacturingHW4.gms Stop 10/04/26 16:51:02 elapsed 0:00:00.264
+--- Job ManufacturingHW4.gms Stop 10/05/26 22:19:11 elapsed 0:00:00.748

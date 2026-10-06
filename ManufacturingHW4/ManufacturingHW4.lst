@@ -1,4 +1,4 @@
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/04/26 16:51:02 Page 1
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/05/26 22:19:10 Page 1
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -57,7 +57,7 @@ C o m p i l a t i o n
   54   
   55  Parameters mintorecips(recip) minimum number of shelves that need to be delivered to each recipient
   56      /Zrox   50,
-  57      Hewes   60
+  57      Hewes   60,
   58      Rock-Wright 40/;
   59   
   60  * 3. DEFINE the variables
@@ -96,8 +96,8 @@ C o m p i l a t i o n
   93  * 6. CLick File menu => RUN (F9) or Solve icon and examine solution report in .LST file
 
 
-COMPILATION TIME     =        0.000 SECONDS      3 MB  54.4.0 9a60ae27 WEX-WEI
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/04/26 16:51:02 Page 2
+COMPILATION TIME     =        0.016 SECONDS      3 MB  54.4.0 9a60ae27 WEX-WEI
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/05/26 22:19:10 Page 2
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Equation Listing    SOLVE DELIVERING Using LP From line 90
 
@@ -129,7 +129,7 @@ RECIP_CONSTRAIN(Hewes)..  Y(Thomas,Hewes) + Y(Wash-Burn,Hewes) =G= 60 ; (LHS = 0
      
 RECIP_CONSTRAIN(Rock-Wright)..  Y(Thomas,Rock-Wright) + Y(Wash-Burn,Rock-Wright) =G= 40 ; (LHS = 0, INFES = 40 ****)
      
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/04/26 16:51:02 Page 3
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/05/26 22:19:10 Page 3
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Column Listing      SOLVE DELIVERING Using LP From line 90
 
@@ -184,7 +184,7 @@ VCOST
                 (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
         1       COST
 
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/04/26 16:51:02 Page 4
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/05/26 22:19:10 Page 4
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Range Statistics    SOLVE DELIVERING Using LP From line 90
 
@@ -195,7 +195,7 @@ RHS       [min, max] : [ 4.000E+01, 7.500E+01] - Zero values observed as well
 Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 Matrix    [min, max] : [ 1.000E+00, 8.000E+00]
 
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/04/26 16:51:02 Page 5
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/05/26 22:19:10 Page 5
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Model Statistics    SOLVE DELIVERING Using LP From line 90
 
@@ -207,8 +207,8 @@ BLOCKS OF VARIABLES           3     SINGLE VARIABLES           11
 NON ZERO ELEMENTS            31
 
 
-GENERATION TIME      =        0.031 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/04/26 16:51:02 Page 6
+GENERATION TIME      =        0.078 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/05/26 22:19:10 Page 6
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE DELIVERING Using LP From line 90
 
@@ -301,7 +301,7 @@ Wash-Burn.Rock-Wright          .            40.0000        +INF             .
                              0  UNBOUNDED
 
 
-EXECUTION TIME       =        0.203 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
+EXECUTION TIME       =        0.688 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
 
 
 USER: Course License                                 G260818+0003Ac-GEN

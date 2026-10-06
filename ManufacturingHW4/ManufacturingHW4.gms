@@ -54,7 +54,7 @@ Wash-Burn           3           4           4;
 
 Parameters mintorecips(recip) minimum number of shelves that need to be delivered to each recipient
     /Zrox   50,
-    Hewes   60
+    Hewes   60,
     Rock-Wright 40/;
 
 * 3. DEFINE the variables
