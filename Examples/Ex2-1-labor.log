@@ -1,4 +1,4 @@
---- Job Ex2-1-labor.gms Start 10/02/26 21:28:13 54.4.0 9a60ae27 WEX-WEI x86 64bit/MS Windows
+--- Job Ex2-1-labor.gms Start 10/06/26 15:23:08 54.4.0 9a60ae27 WEX-WEI x86 64bit/MS Windows
 --- Applying:
     C:\GAMS\54\gmsprmNT.txt
 --- GAMS Parameters defined
@@ -16,26 +16,33 @@ Licensee: Course License                                 G260818+0003Ac-GEN
           Utah State University                                     DCE5615
           225a\gamslice.dat
           1d9a2824-f32d-4897
-          node:89659105 mem:16 cores:12 ipport:52820 v:2                   
+          node:89659105 mem:16 cores:12 ipport:65366 v:2                   
           Course license for use within the course and related course work
           The time-limited license stops working on : Jun 14, 2027
 System information: 12 physical cores and 16 Gb physical memory detected
 GAMS 54.4.0   Copyright (C) 1987-2026 GAMS Development. All rights reserved
 --- Starting compilation
---- Ex2-1-labor.gms(78) 3 Mb
---- Starting execution: elapsed 0:00:00.056
+--- Ex2-1-labor.gms(80) 3 Mb
+--- Starting execution: elapsed 0:00:00.078
+--- Ex2-1-labor.gms(72) 4 Mb
 --- Generating LP model PLANTING
---- Ex2-1-labor.gms(75) 4 Mb
+--- Ex2-1-labor.gms(77) 4 Mb
 ---   4 rows  3 columns  9 non-zeroes
 --- Range statistics (absolute non-zero finite values)
 --- RHS       [min, max] : [ 1.200E+04, 4.000E+06] - Zero values observed as well
 --- Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 --- Matrix    [min, max] : [ 1.000E+00, 2.000E+03]
---- Executing CPLEX (Solvelink=2): elapsed 0:00:00.272
+--- Executing CPLEX (Solvelink=2): elapsed 0:00:02.163
 
 IBM ILOG CPLEX   54.4.0 9a60ae27 Sep 9, 2026           WEI x86 64bit/MS Window
 
 *** This solver runs with a community license.
+
+--- Reading option file 'C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\Exam
+---     ples\cplex.opt':
+--- Setting 'objrng': all
+--- Setting 'rhsrng': all
+
 --- GMO setup time: 0.00s
 --- GMO memory 0.50 Mb (peak 0.50 Mb)
 --- Dictionary memory 0.00 Mb
@@ -52,7 +59,7 @@ CPXPARAM_MIP_Tolerances_AbsMIPGap                0
 Tried aggregator 1 time.
 LP Presolve eliminated 0 rows and 1 columns.
 Reduced LP has 3 rows, 2 columns, and 6 nonzeros.
-Presolve time = 0.01 sec. (0.00 ticks)
+Presolve time = 0.00 sec. (0.00 ticks)
 
 Iteration      Dual Objective            In Variable           Out Variable
      1 sI            0.000000            X(Tomatoes)RES_CONSTRAIN(Lab slack
@@ -60,7 +67,25 @@ Iteration      Dual Objective            In Variable           Out Variable
      3           20000.000000RES_CONSTRAIN(Lab slackRES_CONSTRAIN(Lan slack
 
 --- LP status (1): optimal.
---- Cplex Time: 0.03sec (det. 0.01 ticks)
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+--- Start ranging / sensitivity analysis...
+--- Right-hand-side ranging...
+
+EQUATION NAME                            LOWER           CURRENT             UPPER
+-------------                            -----           -------             -----
+PROFIT                                    -INF                NA              +INF   
+RES_CONSTRAIN(Water)                     3e+06             4e+06             8e+06   
+RES_CONSTRAIN(Land)                       6000             12000           14333.3   
+RES_CONSTRAIN(Labor)                     14000             17500              +INF   
+
+--- Objective ranging...
+
+VARIABLE NAME                            LOWER           CURRENT             UPPER
+-------------                            -----           -------             -----
+X(Eggplant)                                3.5                 6           9.33333   
+X(Tomatoes)                                4.5                 7                12   
+VPROFIT                                   -INF                NA              +INF   
 
 
 Optimal solution found
@@ -68,4 +93,4 @@ Objective:        20000.000000
 
 --- Reading solution for model PLANTING
 *** Status: Normal completion
---- Job Ex2-1-labor.gms Stop 10/02/26 21:28:14 elapsed 0:00:00.888
+--- Job Ex2-1-labor.gms Stop 10/06/26 15:23:12 elapsed 0:00:03.948

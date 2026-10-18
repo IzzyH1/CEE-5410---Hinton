@@ -1,0 +1,127 @@
+
+--- Job MixedIntegerHW5.gms Start 10/17/26 18:49:27 54.4.0 9a60ae27 WEX-WEI x86 64bit/MS Windows
+--- Applying:
+    C:\GAMS\54\gmsprmNT.txt
+--- GAMS Parameters defined
+    Input "C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\Mixed Integer Problem\MixedIntegerHW5.gms"
+    PageSize 0
+    ScrDir "C:\Users\isabe\OneDrive\Desktop\Systems Analysis\SystemsAnalysisCoursework\Mixed Integer Problem\225a\"
+    SysDir C:\GAMS\54\
+    LogOption 3
+    AppendLog 1
+    ErrMsg 1
+    ErrorLog 99
+    IDE 1
+    LstTitleLeftAligned 1
+Licensee: Course License                                 G260818+0003Ac-GEN
+          Utah State University                                     DCE5615
+          225a\gamslice.dat
+          1d9a2824-f32d-4897
+          node:89659105 mem:16 cores:12 ipport:55805 v:2                   
+          Course license for use within the course and related course work
+          The time-limited license stops working on : Jun 14, 2027
+System information: 12 physical cores and 16 Gb physical memory detected
+GAMS 54.4.0   Copyright (C) 1987-2026 GAMS Development. All rights reserved
+--- Starting compilation
+--- MixedIntegerHW5.gms(77) 3 Mb
+--- Starting execution: elapsed 0:00:00.049
+--- Generating MIP model IrrigationSources
+--- MixedIntegerHW5.gms(73) 4 Mb
+---   10 rows  10 columns  30 non-zeroes
+---   3 discrete-columns
+--- Range statistics (absolute non-zero finite values)
+--- RHS       [min, max] : [ 1.000E+00, 9.650E+02] - Zero values observed as well
+--- Bound     [min, max] : [ 1.000E+00, 1.000E+00] - Zero values observed as well
+--- Matrix    [min, max] : [ 1.000E+00, 1.000E+04]
+--- Executing CPLEX (Solvelink=2): elapsed 0:00:00.512
+
+IBM ILOG CPLEX   54.4.0 9a60ae27 Sep 9, 2026           WEI x86 64bit/MS Window
+
+*** This solver runs with a community license.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 22.1.2.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+Version identifier: 22.1.2.0 | 2024-11-25 | 0edbb82fd
+CPXPARAM_Advance                                 0
+CPXPARAM_Simplex_Display                         2
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Pool_Capacity                       0
+CPXPARAM_Preprocessing_QCPDuals                  0
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+Generic callback                                 0x50
+Found incumbent of value 0.000000 after 0.02 sec. (0.00 ticks)
+Tried aggregator 1 time.
+MIP Presolve eliminated 0 rows and 1 columns.
+MIP Presolve modified 1 coefficients.
+Reduced MIP has 9 rows, 9 columns, and 20 nonzeros.
+Reduced MIP has 3 binaries, 0 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.02 sec. (0.01 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Tried aggregator 1 time.
+Reduced MIP has 9 rows, 9 columns, and 20 nonzeros.
+Reduced MIP has 3 binaries, 0 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.00 sec. (0.01 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Clique table members: 1.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: deterministic, using up to 16 threads.
+Parallel mode: deterministic, using up to 3 threads for parallel tasks at root LP.
+Tried aggregator 1 time.
+No LP presolve or aggregator reductions.
+Presolve time = 0.00 sec. (0.00 ticks)
+
+Iteration      Dual Objective            In Variable           Out Variable
+     1          920920.000000                X(hd,s)   MassBalance(s) slack
+     2          798000.000000                X(hd,w)   MassBalance(w) slack
+     3          788500.000000                  I(hd)CapacityConstrain slack
+     4          784214.285714                  I(ld)CapacityConstrain slack
+     5          782700.000000                X(rd,w)                X(hd,w)
+     6          782700.000000                X(ld,w)CapacityConstrain slack
+     7          782700.000000                X(hd,w)           OneDam slack
+     8          777419.800747                  I(rd)CapacityConstrain slack
+Root relaxation solution time = 0.02 sec. (0.01 ticks)
+
+        Nodes                                         Cuts/
+   Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
+
+*     0+    0                            0.0000  1544240.0000              --- 
+Found incumbent of value 0.000000 after 0.08 sec. (0.05 ticks)
+*     0+    0                       354000.0000  1544240.0000           336.23%
+Found incumbent of value 354000.000000 after 0.08 sec. (0.05 ticks)
+*     0+    0                       457740.0000  1544240.0000           237.36%
+Found incumbent of value 457740.000000 after 0.08 sec. (0.05 ticks)
+      0     0   777419.8007     1   457740.0000   777419.8007        8   69.84%
+*     0+    0                       774700.0000   777419.8007             0.35%
+Found incumbent of value 774700.000000 after 0.08 sec. (0.05 ticks)
+      0     0        cutoff         774700.0000                      8     --- 
+Elapsed time = 0.11 sec. (0.07 ticks, tree = 0.01 MB)
+
+Root node processing (before b&c):
+  Real time             =    0.11 sec. (0.07 ticks)
+Parallel b&c, 16 threads:
+  Real time             =    0.00 sec. (0.00 ticks)
+  Sync time (average)   =    0.00 sec.
+  Wait time (average)   =    0.00 sec.
+                          ------------
+Total (root+branch&cut) =    0.11 sec. (0.07 ticks)
+
+--- MIP status (101): integer optimal solution.
+--- Cplex Time: 0.14sec (det. 0.07 ticks)
+
+
+Proven optimal solution
+MIP Solution:       774700.000000    (8 iterations, 0 nodes)
+
+Best possible:      774700.000000
+Absolute gap:            0.000000
+Relative gap:            0.000000
+
+--- Reading solution for model IrrigationSources
+--- Solver did not provide marginals for model IrrigationSources
+--- To request marginals from the solver set option requestMarginals >= 1
+*** Status: Normal completion
+--- Job MixedIntegerHW5.gms Stop 10/17/26 18:49:28 elapsed 0:00:01.774
