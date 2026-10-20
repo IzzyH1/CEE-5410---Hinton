@@ -58,12 +58,14 @@ POSITIVE VARIABLES X;
 EQUATIONS
    TotalRev             Total revenue ($) and objective function value
    OneDam              Only one dam can be built
-   MassBalance         Mass Balance for river diversion
+   MassBalanceRiver         Mass Balance for river diversion
+   MassBalanceRes       Mass Balance for reservoir diversion
    CapacityConstraint  The water from each source must be less than its' maximum capacity;
 
 TotalRev..                 TPROFIT =E= SUM((src,time), Revenue*WaterDemand(time)*X(src,time))-Sum(src, CapCost(src)*I(src)) - SUM((src,time), OpCost(src)*X(src,time));
 OneDam..              I("hd") + I("ld") =L= 1;
-MassBalance(time)..         X("rd", time) =L= Inflow(time) - X("hd",time) - X("ld", time) + GroundWater;
+MassBalanceRiver(time)..         X("rd", time) =L= Inflow(time) - X("hd",time) - X("ld", time) + GroundWater;
+MassBalanceRes(time)..           X("hd",time) + X("ld",time) =L= Inflow(time);
 CapacityConstraint(src,time)..    X(src,time) =L= Capacity(src)*I(src);
 
 * 5. DEFINE the MODEL from the EQUATIONS
