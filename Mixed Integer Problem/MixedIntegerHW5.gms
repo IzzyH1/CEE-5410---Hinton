@@ -1,17 +1,12 @@
 $ontext
-CEE 6410 Fall 2015
-Example 6 in the Lecture notes for 9/29
+CEE 6410 Fall 2026
+Problem 7.1 from 
 
-Minimize cost to supply water by a new treatment plant or wholesale contract
-This is the relaxed version that treats the interger decision variables
-as standard, positive, continuous variables.
-With the additional $35,000 capital cost for establishing the wholesale contract.
+Maximize profits from irrigation by optimizing the development and use of potential dams and water pump.
 
-Integer version using INTEGER VARIABLES statement and SOLVE as MIP.
-
-David E Rosenberg
-david.rosenberg@usu.edu
-September 28, 2015
+Izzy Hinton
+isabel.hinton@usu.edu
+October 19, 2026
 $offtext
 
 * 1. DEFINE the SETS
@@ -41,7 +36,7 @@ PARAMETERS
         /w 600,
          s 200/
     Revenue rate of revenue produced from each irrigated acre ($ per acre) /300/
-*GroundWater is 2 ac-ft/day multiplied by 365/2 for the gw recharge for 1 time step
+*GroundWater is 2 ac-ft/day multiplied by 365/2 for the gw for 1 time step
     GroundWater volume of water that is added to the river flow through groundwater (ac-ft) /365/;
 
 * 3. DEFINE the variables
@@ -58,12 +53,12 @@ POSITIVE VARIABLES X;
 EQUATIONS
    TotalRev             Total revenue ($) and objective function value
    OneDam              Only one dam can be built
-   MassBalanceRiver         Mass Balance for river diversion
+   MassBalanceRiver    Mass Balance for river diversion
    MassBalanceRes       Mass Balance for reservoir diversion
    CapacityConstraint  The water from each source must be less than its' maximum capacity;
 
 TotalRev..                 TPROFIT =E= SUM((src,time), Revenue*WaterDemand(time)*X(src,time))-Sum(src, CapCost(src)*I(src)) - SUM((src,time), OpCost(src)*X(src,time));
-OneDam..              I("hd") + I("ld") =L= 1;
+OneDam..                         I("hd") + I("ld") =L= 1;
 MassBalanceRiver(time)..         X("rd", time) =L= Inflow(time) - X("hd",time) - X("ld", time) + GroundWater;
 MassBalanceRes(time)..           X("hd",time) + X("ld",time) =L= Inflow(time);
 CapacityConstraint(src,time)..    X(src,time) =L= Capacity(src)*I(src);

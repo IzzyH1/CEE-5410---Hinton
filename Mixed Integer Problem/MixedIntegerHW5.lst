@@ -1,91 +1,86 @@
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/19/26 16:36:45 Page 1
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/19/26 23:24:54 Page 1
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
 
-      CEE 6410 Fall 2015
-      Example 6 in the Lecture notes for 9/29
+      CEE 6410 Fall 2026
+      Problem 7.1 from 
        
-      Minimize cost to supply water by a new treatment plant or wholesale contract
-      This is the relaxed version that treats the interger decision variables
-      as standard, positive, continuous variables.
-      With the additional $35,000 capital cost for establishing the wholesale contract.
+      Maximize profits from irrigation by optimizing the development and use of potential dams and water pump.
        
-      Integer version using INTEGER VARIABLES statement and SOLVE as MIP.
-       
-      David E Rosenberg
-      david.rosenberg@usu.edu
-      September 28, 2015
+      Izzy Hinton
+      isabel.hinton@usu.edu
+      October 19, 2026
+  11   
+  12  * 1. DEFINE the SETS
+  13  SETS
+  14  src irrigation water sources /hd "high dam", ld "low dam", rd "river diversion"/
+  15  time season that irrigation occurs in /w "winter", s "spring"/;
   16   
-  17  * 1. DEFINE the SETS
-  18  SETS
-  19  src irrigation water sources /hd "high dam", ld "low dam", rd "river diversion"/
-  20  time season that irrigation occurs in /w "winter", s "spring"/;
-  21   
-  22  * 2. DEFINE input data
-  23  PARAMETERS
-  24     CapCost(src) capital cost ($ to build)
-  25           /hd 10000,
-  26            ld 6000,
-  27            rd 8000/
-  28     OpCost(src) operating cost ($ per ac-ft)
-  29           /hd 0,
-  30            ld 0,
-  31            rd 20/
-  32    WaterDemand(time) volume of water required for an acre of crop (ac-ft per acre)
-  33          /w 1,
-  34           s 3/
-  35  * river diversion capacity was given in ac-ft/day multiplying by 365/2 gives the semi-annual capacity
-  36      Capacity(src) maximum volume of water that can be extraced from a source (ac-ft)
-  37          /hd 700,
-  38          ld 300,
-  39          rd 401.5/
-  40      Inflow(time) volume of water flowing into the reservoir each season (ac-ft)
-  41          /w 600,
-  42           s 200/
-  43      Revenue rate of revenue produced from each irrigated acre ($ per acre) /300/
-  44  *GroundWater is 2 ac-ft/day multiplied by 365/2 for the gw recharge for 1 time step
-  45      GroundWater volume of water that is added to the river flow through groundwater (ac-ft) /365/;
+  17  * 2. DEFINE input data
+  18  PARAMETERS
+  19     CapCost(src) capital cost ($ to build)
+  20           /hd 10000,
+  21            ld 6000,
+  22            rd 8000/
+  23     OpCost(src) operating cost ($ per ac-ft)
+  24           /hd 0,
+  25            ld 0,
+  26            rd 20/
+  27    WaterDemand(time) volume of water required for an acre of crop (ac-ft per acre)
+  28          /w 1,
+  29           s 3/
+  30  * river diversion capacity was given in ac-ft/day multiplying by 365/2 gives the semi-annual capacity
+  31      Capacity(src) maximum volume of water that can be extraced from a source (ac-ft)
+  32          /hd 700,
+  33          ld 300,
+  34          rd 401.5/
+  35      Inflow(time) volume of water flowing into the reservoir each season (ac-ft)
+  36          /w 600,
+  37           s 200/
+  38      Revenue rate of revenue produced from each irrigated acre ($ per acre) /300/
+  39  *GroundWater is 2 ac-ft/day multiplied by 365/2 for the gw for 1 time step
+  40      GroundWater volume of water that is added to the river flow through groundwater (ac-ft) /365/;
+  41   
+  42  * 3. DEFINE the variables
+  43  VARIABLES I(src) binary decision to build or develop project from source src (1=yes 0=no)
+  44            X(src,time) volume of water provided by source src (ac-ft per year)
+  45            TPROFIT total profit (revenue from irrigation minus cost to irrigate) ($);
   46   
-  47  * 3. DEFINE the variables
-  48  VARIABLES I(src) binary decision to build or develop project from source src (1=yes 0=no)
-  49            X(src,time) volume of water provided by source src (ac-ft per year)
-  50            TPROFIT total profit (revenue from irrigation minus cost to irrigate) ($);
+  47  BINARY VARIABLES I;
+  48   
+  49  * Non-negativity constraints
+  50  POSITIVE VARIABLES X;
   51   
-  52  BINARY VARIABLES I;
-  53   
-  54  * Non-negativity constraints
-  55  POSITIVE VARIABLES X;
-  56   
-  57  * 4. COMBINE variables and data in equations
-  58  EQUATIONS
-  59     TotalRev             Total revenue ($) and objective function value
-  60     OneDam              Only one dam can be built
-  61     MassBalanceRiver         Mass Balance for river diversion
-  62     MassBalanceRes       Mass Balance for reservoir diversion
-  63     CapacityConstraint  The water from each source must be less than its' maximum capacity;
-  64   
-  65  TotalRev..                 TPROFIT =E= SUM((src,time), Revenue*WaterDemand(time)*X(src,time))-Sum(src, CapCost(src)*I(src)) - SUM((src,time), OpCost(src)*X(src,time));
-  66  OneDam..              I("hd") + I("ld") =L= 1;
-  67  MassBalanceRiver(time)..         X("rd", time) =L= Inflow(time) - X("hd",time) - X("ld", time) + GroundWater;
-  68  MassBalanceRes(time)..           X("hd",time) + X("ld",time) =L= Inflow(time);
-  69  CapacityConstraint(src,time)..    X(src,time) =L= Capacity(src)*I(src);
-  70   
-  71  * 5. DEFINE the MODEL from the EQUATIONS
-  72  MODEL IrrigationSources /ALL/;
+  52  * 4. COMBINE variables and data in equations
+  53  EQUATIONS
+  54     TotalRev             Total revenue ($) and objective function value
+  55     OneDam              Only one dam can be built
+  56     MassBalanceRiver    Mass Balance for river diversion
+  57     MassBalanceRes       Mass Balance for reservoir diversion
+  58     CapacityConstraint  The water from each source must be less than its' maximum capacity;
+  59   
+  60  TotalRev..                 TPROFIT =E= SUM((src,time), Revenue*WaterDemand(time)*X(src,time))-Sum(src, CapCost(src)*I(src)) - SUM((src,time), OpCost(src)*X(src,time));
+  61  OneDam..                         I("hd") + I("ld") =L= 1;
+  62  MassBalanceRiver(time)..         X("rd", time) =L= Inflow(time) - X("hd",time) - X("ld", time) + GroundWater;
+  63  MassBalanceRes(time)..           X("hd",time) + X("ld",time) =L= Inflow(time);
+  64  CapacityConstraint(src,time)..    X(src,time) =L= Capacity(src)*I(src);
+  65   
+  66  * 5. DEFINE the MODEL from the EQUATIONS
+  67  MODEL IrrigationSources /ALL/;
+  68   
+  69  * 6. Solve the Model as an LP (relaxed IP)
+  70  SOLVE IrrigationSources USING MIP MAXIMIZING TPROFIT;
+  71   
+  72   
   73   
-  74  * 6. Solve the Model as an LP (relaxed IP)
-  75  SOLVE IrrigationSources USING MIP MAXIMIZING TPROFIT;
-  76   
-  77   
-  78   
-  79   
+  74   
 
 
-COMPILATION TIME     =        0.000 SECONDS      3 MB  54.4.0 9a60ae27 WEX-WEI
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/19/26 16:36:45 Page 2
+COMPILATION TIME     =        0.031 SECONDS      3 MB  54.4.0 9a60ae27 WEX-WEI
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/19/26 23:24:54 Page 2
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Equation Listing    SOLVE IrrigationSources Using MIP From line 75
+Equation Listing    SOLVE IrrigationSources Using MIP From line 70
 
 
 ---- TotalRev  =E=  Total revenue ($) and objective function value
@@ -122,9 +117,9 @@ CapacityConstraint(ld,w)..  - 300*I(ld) + X(ld,w) =L= 0 ; (LHS = 0)
      
 REMAINING 3 ENTRIES SKIPPED
 
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/19/26 16:36:45 Page 3
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/19/26 23:24:54 Page 3
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Column Listing      SOLVE IrrigationSources Using MIP From line 75
+Column Listing      SOLVE IrrigationSources Using MIP From line 70
 
 
 ---- I  binary decision to build or develop project from source src (1=yes 0=no)
@@ -181,9 +176,9 @@ TPROFIT
                 (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
         1       TotalRev
 
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/19/26 16:36:45 Page 4
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/19/26 23:24:54 Page 4
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Range Statistics    SOLVE IrrigationSources Using MIP From line 75
+Range Statistics    SOLVE IrrigationSources Using MIP From line 70
 
 
 RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
@@ -192,9 +187,9 @@ RHS       [min, max] : [ 1.000E+00, 9.650E+02] - Zero values observed as well
 Bound     [min, max] : [ 1.000E+00, 1.000E+00] - Zero values observed as well
 Matrix    [min, max] : [ 1.000E+00, 1.000E+04]
 
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/19/26 16:36:45 Page 5
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/19/26 23:24:54 Page 5
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Model Statistics    SOLVE IrrigationSources Using MIP From line 75
+Model Statistics    SOLVE IrrigationSources Using MIP From line 70
 
 
 MODEL STATISTICS
@@ -204,17 +199,17 @@ BLOCKS OF VARIABLES           3     SINGLE VARIABLES           10
 NON ZERO ELEMENTS            34     DISCRETE VARIABLES          3
 
 
-GENERATION TIME      =        0.016 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
-GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/19/26 16:36:45 Page 6
+GENERATION TIME      =        0.062 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
+GAMS 54.4.0  9a60ae27 Sep 9, 2026           WEX-WEI x86 64bit/MS Windows - 10/19/26 23:24:54 Page 6
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Solution Report     SOLVE IrrigationSources Using MIP From line 75
+Solution Report     SOLVE IrrigationSources Using MIP From line 70
 
 
                S O L V E      S U M M A R Y
 
      MODEL   IrrigationSources   OBJECTIVE  TPROFIT
      TYPE    MIP                 DIRECTION  MAXIMIZE
-     SOLVER  CPLEX               FROM LINE  75
+     SOLVER  CPLEX               FROM LINE  70
 
 **** SOLVER STATUS     1 Normal Completion
 **** MODEL STATUS      1 Optimal
@@ -306,7 +301,7 @@ rd.s          .           365.0000        +INF
                              0  UNBOUNDED
 
 
-EXECUTION TIME       =        0.266 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
+EXECUTION TIME       =        0.797 SECONDS      4 MB  54.4.0 9a60ae27 WEX-WEI
 
 
 USER: Course License                                 G260818+0003Ac-GEN
