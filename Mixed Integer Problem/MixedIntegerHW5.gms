@@ -11,6 +11,7 @@ $offtext
 
 * 1. DEFINE the SETS
 SETS
+*Seasons are not actually stated as winter and spring. Just wanted to avoid confusion from using numbers in label
 src irrigation water sources /hd "high dam", ld "low dam", rd "river diversion"/
 time season that irrigation occurs in /w "winter", s "spring"/;
 
